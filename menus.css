@@ -1,0 +1,405 @@
+#brawlers-menu {
+    position: relative
+}
+
+#brawlers-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap
+}
+
+#brawlers-top h1 {
+    font-size: 3rem
+}
+
+#brawler-search {
+    width: 20rem;
+    max-width: 100%;
+    height: 3.6rem;
+    border: none;
+    outline: none;
+    border-radius: 1.4rem;
+    padding: 0 1.2rem;
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    font-size: 1rem;
+}
+
+#brawlers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem
+}
+
+.brawler-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .06);
+    border: .14rem solid rgba(255, 255, 255, .08);
+    border-radius: 2rem;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: .2s;
+    backdrop-filter: blur(.6rem)
+}
+
+.brawler-card:hover {
+    transform: translateY(-.3rem);
+    background: rgba(255, 255, 255, .1)
+}
+
+.brawler-card.hyper {
+    box-shadow: 0 0 2rem rgba(170, 0, 255, .35);
+    border-color: rgba(170, 0, 255, .4)
+}
+
+.brawler-card.maxed {
+    background: linear-gradient(#eeff00, #47370b);
+}
+
+.brawler-card.maxed.hyper {
+    background: linear-gradient(#e100ff, #44114b)
+}
+
+.brawler-card img.brawler-icon {
+    width: 8rem;
+    height: 8rem;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border: #000 3px solid
+}
+
+.brawler-card h2 {
+    width: 100%;
+    font-size: 1.8rem;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: .5rem
+}
+
+.brawler-power {
+    opacity: .7;
+    margin-bottom: 1rem
+}
+
+.brawler-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .6rem;
+    margin-bottom: 1rem
+}
+
+.brawler-stats span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    background: rgba(255, 255, 255, .08);
+    padding: .45rem .8rem;
+    border-radius: 999rem;
+    font-size: .95rem
+}
+
+.brawler-stats img {
+    width: 1.1rem;
+    height: 1.1rem;
+    object-fit: contain
+}
+
+.brawler-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem
+}
+
+.brawler-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    background: rgba(255, 255, 255, .05);
+    border-radius: 1rem;
+    padding: .7rem;
+    font-size: .92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.brawler-info img {
+    width: 1.15rem;
+    height: 1.15rem;
+    object-fit: contain
+}
+
+.brawler-skin {
+    color: #ffd166;
+    cursor: pointer
+}
+
+.brawler-empty {
+    opacity: .5
+}
+
+.brawler-hyper {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #d400ff, #6a00ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 1rem rgba(170, 0, 255, .5)
+}
+
+#brawler-card-hyepercharge {
+    width: 2.2rem;
+    height: 2.2rem;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    pointer-events: none
+}
+
+.brawler-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+.brawler-card.buffie-charged::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    135deg,rgba(0, 0, 255, 0) 30%, rgba(0, 128, 255, 0.3) 40%, rgba(148, 0, 211, 0.4) 50%, rgba(255, 0, 128, 0.4) 60%, rgba(0, 0, 0, 0) 70%
+  );
+  mix-blend-mode: color-dodge;
+  animation: buffieGlint 7s linear infinite;
+  z-index: 1; 
+  pointer-events: none;
+}
+
+@keyframes buffieGlint {
+  0% {
+    transform: translate(-30%, -30%);
+  }
+  100% {
+    transform: translate(30%, 30%);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+#battlelogs-menu {
+    position: relative
+}
+
+#battlelogs-top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem
+}
+
+.battlelogs-stat {
+    background: rgba(255, 255, 255, .06);
+    border: .14rem solid rgba(255, 255, 255, .08);
+    border-radius: 1.8rem;
+    padding: 1.3rem;
+    backdrop-filter: blur(.6rem)
+}
+
+.battlelogs-stat span {
+    opacity: .65;
+    font-size: .9rem
+}
+
+.battlelogs-stat h2 {
+    margin-top: .5rem;
+    font-size: 1.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+#battlelogs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem
+}
+
+.battle-card {
+    position: relative;
+    background: rgba(255, 255, 255, .06);
+    border: .14rem solid rgba(255, 255, 255, .08);
+    border-radius: 2rem;
+    padding: 1.5rem;
+    overflow: hidden
+}
+
+.battle-card.win {
+    box-shadow: 0 0 2rem rgba(0, 255, 120, .18)
+}
+
+.battle-card.lose {
+    box-shadow: 0 0 2rem rgba(255, 60, 60, .18)
+}
+
+.battle-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem
+}
+
+.battle-mode {
+    display: flex;
+    align-items: center;
+    gap: .8rem
+}
+
+.battle-mode img {
+    width: 3.2rem;
+    height: 3.2rem;
+    object-fit: contain
+}
+
+.battle-mode h2 {
+    font-size: 1.5rem
+}
+
+.battle-mode p {
+    opacity: .7
+}
+
+.battle-result {
+    padding: .5rem 1rem;
+    border-radius: 999rem;
+    font-weight: 700
+}
+
+.battle-result.win {
+    background: rgba(0, 255, 120, .18);
+    color: #6cffaf
+}
+
+.battle-result.lose {
+    background: rgba(255, 60, 60, .18);
+    color: #ff8d8d
+}
+
+.battle-players {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: .8rem;
+    margin-top: 1rem
+}
+
+.battle-player {
+    background: rgba(255, 255, 255, .05);
+    border-radius: 1.2rem;
+    padding: .8rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    min-width: 0
+}
+
+.battle-player img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+    border-radius: 1rem
+}
+
+.battle-player-info {
+    min-width: 0;
+    flex: 1
+}
+
+.battle-player-info h3 {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1
+}
+
+.battle-player-info p {
+    opacity: .7;
+    font-size: .85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.battle-player-info span {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .9rem;
+    margin-top: .25rem
+}
+
+.battle-player-info span img {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0
+}
+
+.battle-extra {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem
+}
+
+.battle-extra div {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(255, 255, 255, .05);
+    padding: .5rem .8rem;
+    border-radius: 999rem
+}
+
+.battle-extra img {
+    width: 1rem;
+    height: 1rem;
+    object-fit: contain
+}

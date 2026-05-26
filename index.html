@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brawl Account</title>
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="menus.css">
+</head>
+
+<body>
+  <div id="progress-bar"></div>
+  <aside id="sidebar" class="collapsed hidden">
+    <button id="toggle-sidebar" style="color: #fff; font-weight: bold">☰</button>
+    <button id="home-sidebar" onclick="window.location.reload()" title="Home"><img src="assets/icon.ico"></button>
+    <nav>
+      <!--buttons-->
+      <button data-menu="status" title="Account status">
+        <img src="assets/trophy.png">
+        <span>Status</span>
+      </button>
+
+      <button data-menu="brawlers" title="Account brawlers">
+        <img src="assets/brawler.png">
+        <span>Brawlers</span>
+      </button>
+
+      <button data-menu="battlelogs" title="Account battlelogs">
+        <img src="assets/solo.png">
+        <span>Battlelogs</span>
+      </button>
+
+      <button data-menu="stats" title="Account stats">
+        <img src="assets/stats.png">
+        <span>Stats</span>
+      </button>
+      <!----------->
+    </nav>
+  </aside>
+  <main>
+
+    <header>
+      <h1>Write your account tag here..</h1>
+      <div id="search-bar">
+        <input id="tag-input" placeholder="Tag here...">
+        <button id="search-button">Search</button>
+      </div>
+    </header>
+    <section id="recent-section">
+      <h2>Recent Searches</h2>
+      <p id="search-warn-txt">Try searching something first!</p>
+      <div id="recent-list"></div>
+    </section>
+    <div id="menus" class="hidden">
+
+      <!-- status menu -->
+      <section class="menu active-menu" id="status-menu">
+        <div id="status-card">
+          <div id="profile-top">
+            <div id="profile-icon"></div>
+            <div>
+              <h1 id="player-name">Player</h1>
+              <p id="player-tag">#TAG</p>
+            </div>
+          </div>
+          <div id="stats-grid">
+            <div class="stat">
+              <img src="assets/trophy.png">
+              <span>Current trophies</span>
+              <h2 id="trophies"></h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/prestige.png">
+              <span>Total prestige</span>
+              <h2 id="prestige"></h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/exp.png">
+              <span>EXP Level</span>
+              <h2 id="level"></h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/ranked.png">
+              <span>Current rank</span>
+              <h2 id="ranked">NONE</h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/exp-ranked.png">
+              <span>Ranked Elo</span>
+              <h2 id="elo"></h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/3v3.png">
+              <span>3v3 Wins</span>
+              <h2 id="wins3v3"></h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/solo.png">
+              <span>Solo Wins</span>
+              <h2 id="solo-wins"></h2>
+            </div>
+
+            <div class="stat">
+              <img src="assets/duo.png">
+              <span>Duo Wins</span>
+              <h2 id="duo-wins"></h2>
+            </div>
+
+          </div>
+
+          <div id="club-card">
+            <h3>Club:</h3>
+            <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="club-icon"
+                id="club-icon"><span id="club-name"></span> | <span id="club-tag" style="color: #7f8486ff"></span></h2>
+            <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="club-icon"
+                src="assets/trophy.png"><span id="club-trophies"></span></h2>
+            <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="club-icon"
+                id="club-t-img"><span id="club-t"></span></h2>
+            <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="club-icon"
+                id="club-ff-img" src="assets/family-friendly.png"><span id="club-ff"></span></h2>
+            <p><br>Club members:</p>
+            <div id="club-members"></div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- BRAWLERS -->
+
+      <section id="brawlers-menu" class="menu">
+        <div id="brawlers-top">
+          <h1>Brawlers</h1><input id="brawler-search" placeholder="Search brawler...">
+        </div>
+        <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="brawler-icon"
+            src="assets/brawler.png"> Brawlers: <span id="brawlers-count"></span></h2>
+        <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="brawler-icon"
+            src="assets/icon.ico"> Maximized brawlers: <span id="max-brawlers-count"></span></h2>
+        <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="brawler-icon"
+            src="assets/hypercharge.png"> Hypercharged brawlers: <span id="hyper-brawlers-count"></span></h2>
+        <h2 style="display: flex; text-align: center; vertical-align: middle; gap: 4px"><img class="brawler-icon"
+            src="assets/trophy.png"> Main brawler: <span id="main-brawler"></span><br><br><br></h2>
+        <div id="brawlers-grid"></div>
+      </section>
+
+      <!-- BATTLELOGS -->
+
+      <section class="menu" id="battlelogs-menu">
+        <div id="battlelogs-top">
+          <div class="battlelogs-stat"><span>Registered battles</span>
+            <h2 id="total-battles"></h2>
+          </div>
+          <div class="battlelogs-stat"><span>Win rate</span>
+            <h2 id="winrate"></h2>
+          </div>
+          <div class="battlelogs-stat"><span>Most wins</span>
+            <h2 id="best-brawler"></h2>
+          </div>
+          <div class="battlelogs-stat"><span>Least wins</span>
+            <h2 id="worst-brawler"></h2>
+          </div>
+          <div class="battlelogs-stat"><span>Nemesis</span>
+            <h2 id="nemesis"></h2>
+          </div>
+        </div>
+        <div id="battlelogs-list"></div>
+      </section>
+
+      <!-- STATS -->
+
+      <section class="menu" id="stats-menu">
+
+        <h1>Stats menu</h1>
+        <p>Coming Soon..</p>
+
+      </section>
+
+    </div>
+
+    <p id="search-message">
+      Try searching an account before assessing data.
+    </p>
+
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
