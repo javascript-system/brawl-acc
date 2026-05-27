@@ -17,7 +17,7 @@
     <button id="home-sidebar" onclick="window.location.reload()" title="Home"><img src="assets/icon.ico"></button>
     <nav>
       <!--buttons-->
-      <button data-menu="status" title="Account status">
+      <button data-menu="status" class="active" title="Account status">
         <img src="assets/trophy.png">
         <span>Status</span>
       </button>
@@ -177,11 +177,151 @@
       <!-- STATS -->
 
       <section class="menu" id="stats-menu">
+        <div id="stats-top">
+          <div class="stats-card">
+            <span>Highest trophies</span>
+            <h2 id="stats-highest-trophies"></h2>
+          </div>
 
-        <h1>Stats menu</h1>
-        <p>Coming Soon..</p>
+          <div class="stats-card">
+            <span>Highest ranked rank</span>
+            <h2 id="stats-highest-ranked"></h2>
+          </div>
 
+          <div class="stats-card">
+            <span>Highest ranked elo</span>
+            <h2 id="stats-highest-elo"></h2>
+          </div>
+
+          <div class="stats-card">
+            <span>Total brawlers</span>
+            <h2 id="stats-total-brawlers"></h2>
+          </div>
+
+          <div class="stats-card">
+            <span>Hypercharges</span>
+            <h2 id="stats-hypercharges"></h2>
+          </div>
+
+          <div class="stats-card">
+            <span>Maxed brawlers</span>
+            <h2 id="stats-maxed"></h2>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+
+          <div class="stats-panel">
+            <h2>Battle performance</h2>
+            <canvas id="trophy-chart"></canvas>
+          </div>
+
+          <div class="stats-panel">
+            <h2>Battle results</h2>
+            <canvas id="wins-chart"></canvas>
+          </div>
+
+          <div class="stats-panel">
+            <h2>Top Brawlers</h2>
+            <div style="height: 200px; margin-bottom: 1.5rem;">
+              <canvas id="top-brawlers-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="stats-panel">
+            <h2>Account stats</h2>
+
+            <div class="stats-list">
+
+              <div>
+                <img src="assets/3v3.png">
+                <span>3v3 wins</span>
+                <h3 id="stats-3v3"></h3>
+              </div>
+
+              <div>
+                <img src="assets/solo.png">
+                <span>Solo wins</span>
+                <h3 id="stats-solo"></h3>
+              </div>
+
+              <div>
+                <img src="assets/duo.png">
+                <span>Duo wins</span>
+                <h3 id="stats-duo"></h3>
+              </div>
+
+              <div>
+                <img src="assets/prestige.png">
+                <span>Prestige</span>
+                <h3 id="stats-prestige"></h3>
+              </div>
+
+              <div>
+                <img src="assets/icon.ico">
+                <span>Equipped skins</span>
+                <h3 id="stats-skins"></h3>
+              </div>
+
+              <div>
+                <img src="assets/hypercharge-buffie.png">
+                <span>Buffed brawlers</span>
+                <h3 id="stats-buffies"></h3>
+              </div>
+
+
+
+
+              <div class="stats-panel">
+                <h2>Brawler Trophy Milestones</h2>
+                <div class="stats-list">
+                  <div>
+                    <img src="assets/rank.png">
+                    <span>Rank 20+ (500+ 🏆)</span>
+                    <h3 id="stats-r20">0</h3>
+                  </div>
+                  <div>
+                    <img src="assets/rank.png">
+                    <span>Rank 25+ (750+ 🏆)</span>
+                    <h3 id="stats-r25">0</h3>
+                  </div>
+                  <div>
+                    <img src="assets/rank.png">
+                    <span>Rank 30+ (1000+ 🏆)</span>
+                    <h3 id="stats-r30">0</h3>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stats-panel">
+                <h2>Recent Playstyle Activity</h2>
+                <div class="stats-list">
+                  <div>
+                    <img src="assets/unknown.png" id="stats-fav-brawler-img" style="border-radius: 8px;">
+                    <span>Most Played Brawler</span>
+                    <h3 id="stats-fav-brawler-name">None</h3>
+                  </div>
+                  <div>
+                    <img src="assets/time.png">
+                    <span>Favorite Mode</span>
+                    <h3 id="stats-fav-mode">Unknown</h3>
+                  </div>
+                  <div>
+                    <img src="assets/fire.png">
+                    <span>Avg Trophy Change</span>
+                    <h3 id="stats-avg-delta">0</h3>
+                  </div>
+                </div>
+              </div>
+
+            </div>
       </section>
+
+    </div>
+    </div>
+
+    </div>
+    </section>
 
     </div>
 
