@@ -13,6 +13,40 @@ async function monitorConnection() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerTag = urlParams.get("player");
+    const pageTarget = urlParams.get("page") || urlParams.get("menu");
+    if (playerTag) {
+        const cleanTag = playerTag.startsWith("#") ? playerTag : `#${playerTag}`;
+        const input = document.getElementById("tag-input");
+        if (input) input.value = cleanTag.toUpperCase();
+        await searchPlayer(cleanTag);
+
+        if (pageTarget) {
+            setTimeout(() => {
+                let fixedPage = pageTarget;
+                let menuExists = false;
+                document.querySelectorAll(".menu").forEach(menu => {
+                    if (`${fixedPage}-menu` === menu.id) menuExists = true;
+                });
+                if (menuExists) {
+                    openMenu(fixedPage);
+                    document.querySelectorAll("#sidebar nav button").forEach(btn => {
+                        if (btn.dataset.menu === fixedPage) {
+                            btn.classList.add("active");
+                        } else {
+                            btn.classList.remove("active");
+                        }
+                    });
+                }
+                else { message("Error", "The requested menu in the URL doesn't exists") }
+            }, 150);
+        }
+    }
+    window.history.replaceState(null, '', window.location.pathname);
+});
+
 const formatedModes = {
     basketBrawl: "Basket Brawl",
     bounty: "Bounty",
@@ -105,7 +139,6 @@ async function searchPlayer(customTag = null) {
     }
 
     resetBar();
-
 }
 
 async function renderStatus(data) {
@@ -123,11 +156,9 @@ async function renderStatus(data) {
             "player-name"
         );
 
-    playerName.textContent =
-        data.name;
+    playerName.textContent = data.name;
 
-    playerName.style.color =
-        color;
+    playerName.style.color = color;
 
 
 
@@ -189,6 +220,13 @@ async function renderStatus(data) {
 }
 
 function openMenu(menu) {
+    document.querySelectorAll("#sidebar nav button").forEach(btn => {
+        if (btn.dataset.menu === menu) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
     document.querySelectorAll(".menu").forEach(element => { element.classList.remove("active-menu"); });
     document.getElementById(`${menu}-menu`).classList.add("active-menu");
 }
@@ -367,6 +405,15 @@ const menusRender = [
             let losses = 0;
             let enemyWins = {};
             let brawlerStats = {};
+            if (typeof data.reason !== "undefined" && data.reason === "notFound") {
+                list.innerHTML = "No battlelogs found";
+                document.getElementById("total-battles").textContent = "0";
+                document.getElementById("winrate").textContent = "None";
+                document.getElementById("best-brawler").textContent = "None";
+                document.getElementById("worst-brawler").textContent = "None";
+                document.getElementById("nemesis").textContent = "None";
+                return;
+            }
             data.items.forEach(log => {
                 const battle = log.battle || {};
                 const event = log.event || {};
@@ -402,6 +449,8 @@ const menusRender = [
                     /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/,
                     "$1-$2-$3T$4:$5:$6"
                 );
+                const mapId = event.id || 0;
+                const mapImageUrl = `https://cdn.brawlify.com/maps/regular/${mapId}.png`;
 
                 const date = fixedDate && !isNaN(Date.parse(fixedDate))
                     ? new Date(fixedDate).toLocaleString()
@@ -413,7 +462,10 @@ const menusRender = [
                         <img src="${modeIcon}" onerror="this.src='assets/unknown.png'">
                         <div>
                             <h2>${formatedModes[mode] || mode}</h2>
-                            <p>${event.map || "Unknown map"}</p>
+                            <p style="cursor: pointer" onclick="">${event.map ? `
+                <a style="text-decoration: none; color: #fff" href="${mapImageUrl}" target="_blank" class="map-link" title="Click to view full map layout">
+                    ${event.map} <span class="map-link-icon"></span>
+                </a>` : "Unknown map"}</p>
                         </div>
                     </div>
                     <div class="battle-result ${result}">${battle.trophyChange > 0 ? `+${battle.trophyChange}` : battle.trophyChange || 0} 🏆</div>
@@ -440,7 +492,7 @@ const menusRender = [
                     return `<div class="battle-player">
                                 <img src="${brawler}">
                                 <div class="battle-player-info">
-                                    <h3 style="color:${color}">${p.name}</h3>
+                                    <h3 style="color:${color}; cursor: pointer" onclick="window.open('${window.location.href}?player=${p.tag}', '_blank')">${p.name}</h3>
                                     <p>${p.brawler.name} • Power ${p.brawler.power}</p>
                                     <span><img src="assets/trophy.png">${p.brawler.trophies}</span>
                                 </div>
@@ -450,6 +502,16 @@ const menusRender = [
                 list.appendChild(card);
             });
 
+            if (!data.items.length > 0) {
+                list.innerHTML = "No battlelogs found";
+                document.getElementById("total-battles").textContent = "0";
+                document.getElementById("winrate").textContent = "None";
+                document.getElementById("best-brawler").textContent = "None";
+                document.getElementById("worst-brawler").textContent = "None";
+                document.getElementById("nemesis").textContent = "None";
+                return;
+            }
+
             const best = Object.entries(brawlerStats).sort((a, b) => b[1].wins - a[1].wins)[0]?.[0] || "None";
             const worst = Object.entries(brawlerStats).sort((a, b) => a[1].wins - b[1].wins)[0]?.[0] || "None";
             const nemesis = Object.entries(enemyWins).sort((a, b) => b[1] - a[1])[0]?.[0] || "None";
@@ -458,6 +520,235 @@ const menusRender = [
             document.getElementById("best-brawler").textContent = best;
             document.getElementById("worst-brawler").textContent = worst;
             document.getElementById("nemesis").textContent = nemesis;
-            list.innerHTML += `<p>${data.items.length > 0 ? "No more battlelogs found." : "No battlelogs found."}</p>`;
+            list.innerHTML += `<p>No more battlelogs found.</p>`;
+        }
+    },
+    {
+        name: "stats-menu",
+        func: async (player, _club) => {
+            if (typeof Chart === "undefined") {
+                const script = document.createElement("script");
+                script.src = "https://cdn.jsdelivr.net/npm/chart.js";
+                document.body.appendChild(script);
+
+                await new Promise(resolve => {
+                    script.onload = resolve;
+                });
+            }
+            const brawlFontConfig = {
+                family: "'brawl', sans-serif",
+                size: 14,
+                weight: "bold"
+            };
+
+            const whiteColor = "#FFFFFF";
+            const response = await fetch(`${BACKEND}battlelog/${player.tag.replace("#", "")}`);
+            const data = await response.json();
+            const battles = data.items || [];
+            const brawlers = player.brawlers || [];
+            const topBrawlers = [...brawlers]
+                .sort((a, b) => b.trophies - a.trophies)
+                .slice(0, 3);
+            const hypercharges = brawlers.filter(b => b.hyperCharges?.length > 0).length;
+            const maxed =
+                brawlers.filter(b => b.power >= 11).length;
+            const skins = brawlers.filter(b => b.skin).length;
+            const buffies = brawlers.filter(b => b.buffies?.gadget || b.buffies?.starPower || b.buffies?.hyperCharge).length;
+            let totalTrophiesCombined = 0;
+            let rank20Plus = 0;
+            let rank25Plus = 0;
+            let rank30Plus = 0;
+            brawlers.forEach(b => {
+                totalTrophiesCombined += b.trophies || 0;
+                if (b.trophies >= 1000) rank30Plus++;
+                else if (b.trophies >= 750) rank25Plus++;
+                else if (b.trophies >= 500) rank20Plus++;
+            });
+
+            let mvpCount = 0;
+            let totalTrophyDelta = 0;
+            let modeFrequency = {};
+            let playedBrawlersFrequency = {};
+            let mostPlayedBrawlerId = null;
+
+            battles.forEach(log => {
+                const battle = log.battle || {};
+                const event = log.event || {};
+
+                totalTrophyDelta += battle.trophyChange || 0;
+
+                const currentMode = event.mode || battle.mode;
+                if (currentMode) {
+                    modeFrequency[currentMode] = (modeFrequency[currentMode] || 0) + 1;
+                }
+
+                if (battle.starPlayer && battle.starPlayer.tag === player.tag) {
+                    mvpCount++;
+                }
+
+                const playersList = battle.players || battle.teams?.flat() || [];
+                const me = playersList.find(p => p.tag === player.tag);
+
+                if (me && me.brawler) {
+                    if (me.brawler.name) {
+                        if (!playedBrawlersFrequency[me.brawler.name]) {
+                            playedBrawlersFrequency[me.brawler.name] = { count: 0, id: me.brawler.id };
+                        }
+                        playedBrawlersFrequency[me.brawler.name].count++;
+                    }
+                }
+            });
+
+            const favoriteModeRaw = Object.entries(modeFrequency).sort((a, b) => b[1] - a[1])[0]?.[0] || "Unknown";
+            const favoriteModeFormatted = formatedModes[favoriteModeRaw] || favoriteModeRaw;
+
+            const topPlayedBrawlerEntry = Object.entries(playedBrawlersFrequency).sort((a, b) => b[1].count - a[1].count)[0];
+            const favoriteBrawlerName = topPlayedBrawlerEntry ? topPlayedBrawlerEntry[0] : "None";
+            if (topPlayedBrawlerEntry) {
+                mostPlayedBrawlerId = topPlayedBrawlerEntry[1].id;
+            }
+
+            const avgTrophyDelta = battles.length > 0 ? (totalTrophyDelta / battles.length).toFixed(1) : "0";
+
+
+
+            document.getElementById("stats-highest-trophies").textContent = player.highestTrophies || 0;
+            document.getElementById("stats-highest-ranked").textContent = player.highestAllTimeRankedRankName || "NONE";
+            document.getElementById("stats-highest-elo").textContent = player.highestAllTimeRankedElo || 0;
+            document.getElementById("stats-total-brawlers").textContent = brawlers.length;
+            document.getElementById("stats-hypercharges").textContent = hypercharges;
+            document.getElementById("stats-maxed").textContent = maxed;
+            document.getElementById("stats-3v3").textContent = player["3vs3Victories"] || 0;
+            document.getElementById("stats-solo").textContent = player.soloVictories || 0;
+            document.getElementById("stats-duo").textContent = player.duoVictories || 0;
+            document.getElementById("stats-prestige").textContent = player.totalPrestigeLevel || 0;
+            document.getElementById("stats-skins").textContent = skins;
+            document.getElementById("stats-buffies").textContent = buffies;
+            document.getElementById("stats-r20").textContent = rank20Plus;
+            document.getElementById("stats-r25").textContent = rank25Plus;
+            document.getElementById("stats-r30").textContent = rank30Plus;
+            document.getElementById("stats-fav-mode").textContent = favoriteModeFormatted;
+            document.getElementById("stats-avg-delta").textContent = totalTrophyDelta > 0 ? `+${avgTrophyDelta}` : avgTrophyDelta;
+            document.getElementById("stats-fav-brawler-name").textContent = favoriteBrawlerName;
+            if (mostPlayedBrawlerId) {
+                document.getElementById("stats-fav-brawler-img").src = `https://cdn.brawlify.com/brawlers/borderless/${mostPlayedBrawlerId}.png`;
+            } else {
+                document.getElementById("stats-fav-brawler-img").src = "assets/unknown.png";
+            }
+
+
+            const trophiesData = [];
+            const trophiesLabels = [];
+            let wins = 0;
+            let losses = 0;
+            battles.reverse().forEach((battle, index) => {
+                const trophyChange = battle.battle?.trophyChange || 0;
+                trophiesData.push(trophyChange);
+                trophiesLabels.push(`#${index + 1}`);
+                if (trophyChange >= 0) {
+                    wins++;
+                } else {
+                    losses++;
+                }
+            });
+            if (window.trophyChart) {
+                window.trophyChart.destroy();
+            }
+            if (window.winsChart) {
+                window.winsChart.destroy();
+            }
+            if (window.topBrawlersChart) {
+                window.topBrawlersChart.destroy();
+            }
+            window.trophyChart = new Chart(
+                document.getElementById("trophy-chart"),
+                {
+                    type: "line",
+                    data: {
+                        labels: trophiesLabels,
+                        datasets: [
+                            {
+                                label: "Trophy gain/loss",
+                                data: trophiesData,
+                                tension: .3,
+                                borderColor: "#ffcb52",
+                                backgroundColor: "rgba(255, 203, 82, 0.2)",
+                                pointBackgroundColor: "#ff8a00"
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: whiteColor, font: brawlFontConfig },
+                                onClick: (e) => e.stopPropagation()
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: whiteColor, font: brawlFontConfig } },
+                            y: { ticks: { color: whiteColor, font: brawlFontConfig } }
+                        }
+                    }
+                }
+            );
+
+            window.winsChart = new Chart(
+                document.getElementById("wins-chart"),
+                {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Wins", "Losses"],
+                        datasets: [{
+                            data: [wins, losses],
+                            backgroundColor: ["#2a9d8f", "#e63946"],
+                            borderWidth: 3,
+                            borderColor: "#171327"
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: whiteColor, font: brawlFontConfig },
+                                onClick: (e) => e.stopPropagation()
+                            }
+                        }
+                    }
+                }
+            );
+
+            window.topBrawlersChart = new Chart(
+                document.getElementById("top-brawlers-chart"),
+                {
+                    type: "bar",
+                    data: {
+                        labels: topBrawlers.map(b => b.name),
+                        datasets: [{
+                            label: "Trophies",
+                            data: topBrawlers.map(b => b.trophies),
+                            backgroundColor: ["#ffcb52", "#a9afb4ff", "#7a5641ff"],
+                            borderWidth: 3,
+                            borderColor: "#171327"
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: whiteColor, font: brawlFontConfig },
+                                onClick: (e) => e.stopPropagation()
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: whiteColor, font: brawlFontConfig } },
+                            y: { ticks: { color: whiteColor, font: brawlFontConfig } }
+                        }
+                    }
+                }
+            );
         }
     }];
